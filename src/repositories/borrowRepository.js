@@ -21,6 +21,10 @@ export function findActiveBorrow(bookId) {
   });
 }
 
+export function findByBookId(bookId) {
+  return prisma.borrow.findFirst({ where: { bookId } });
+}
+
 export function create(data) {
   return prisma.borrow.create({ data });
 }

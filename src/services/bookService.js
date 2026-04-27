@@ -1,5 +1,6 @@
 import * as bookRepo from "../repositories/bookRepository.js";
 import * as categoryRepo from "../repositories/categoryRepository.js";
+import * as borrowRepo from "../repositories/borrowRepository.js";
 
 export async function getAll() {
   const books = await bookRepo.findAll();
@@ -70,6 +71,11 @@ export async function remove(id) {
   const existing = await bookRepo.findById(id);
   if (!existing) {
     return { status: 404, data: { error: "Book not found" } };
+  }
+
+  const hasBorrows = await borrowRepo.findByBookId(id);
+  if (hasBorrows) {
+    return { status: 409, data: { error: "Cannot delete book with existing borrow records" } };
   }
 
   const deleted = await bookRepo.remove(id);

@@ -1,4 +1,5 @@
 import * as categoryRepo from "../repositories/categoryRepository.js";
+import * as bookRepo from "../repositories/bookRepository.js";
 
 export async function getAll() {
   const categories = await categoryRepo.findAll();
@@ -55,6 +56,11 @@ export async function remove(id) {
   const existing = await categoryRepo.findById(id);
   if (!existing) {
     return { status: 404, data: { error: "Category not found" } };
+  }
+
+  const hasBooks = await bookRepo.findByCategoryId(id);
+  if (hasBooks) {
+    return { status: 409, data: { error: "Cannot delete category with associated books" } };
   }
 
   const deleted = await categoryRepo.remove(id);

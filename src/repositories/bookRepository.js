@@ -12,6 +12,10 @@ export function findByIsbn(isbn) {
   return prisma.book.findUnique({ where: { isbn } });
 }
 
+export function findByCategoryId(categoryId) {
+  return prisma.book.findFirst({ where: { categoryId } });
+}
+
 export function create(data) {
   return prisma.book.create({ data });
 }
